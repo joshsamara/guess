@@ -58,7 +58,15 @@ def make_guess():
 	global past
 	print "Guess a word:"
 	guess = raw_input().lower()
-	if len(guess) != letters:
+	if guess == "i give up!":
+		print "You lose after %s attempts." % attempts
+		print "The word was: %s" % choice
+	elif guess == "$h0w m3!!1!":
+		print "The word is: %s" % choice
+		attempts += 9001
+		raw_input()
+		next()
+	elif len(guess) != letters:
 		print "Invalid guess. Guesses must be %s letters." % letters
 		make_guess()
 	else:
@@ -82,7 +90,7 @@ def make_guess():
 			past.append([guess, wrongs, rights])
 			next()
 
-			
+
 def next():
 	global wrongs
 	global rights
@@ -128,6 +136,5 @@ while playing:
 	print "Press enter to continue:"
 	raw_input()
 	clear()
-	print choice
 	make_guess()
 	play_again()
