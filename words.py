@@ -1089,3 +1089,24 @@ zebra zebus zeins zerks zeros zests zesty zetas zibet zilch zills zincs
 zincy zineb zines zings zingy zinky zippy ziram zitis zizit zlote zloty
 zoeae zoeal zoeas zombi zonae zonal zoned zoner zones zonks zooey zooid
 zooks zooms zoons zooty zoril zoris zouks zowie zuzim zymes""".replace("\n"," ").split(" ")
+
+# Don't do this, there's no need
+# all_numbers_3=[]
+# all_numbers_4=[]
+# all_numbers_5=[]
+
+# for x in range(0,10):
+# 	string = str(x)
+# 	for y in range(0,10):
+# 		string2 = string + str(y)
+# 		for z in range (0,10):
+# 			string3 = string2 + str(z)
+# 			all_numbers_3.append(string3)
+# 			for a in range(0,10):
+# 				string4= string3 + str(a)
+# 				all_numbers_4.append(string4)
+# 				for b in range(0,10):
+# 					string5=string4 + str(b)
+# 					all_numbers_5.append(string5)
+
+
