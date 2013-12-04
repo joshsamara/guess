@@ -2,15 +2,19 @@ import sys
 import random
 import os
 import math
-sys.path.append(".")
-from words import *
+import re
 
 
 def clear():
     os.system('clear')
 
+def loadWords(length):
+    filePath = os.path.dirname(os.path.abspath(__file__)) + "/shakespeare.txt"
+    textFile = open(filePath,'r').read()
+    allWords = [item for item in list(set(re.findall(r'\b[a-z]+\b', textFile))) if len(item) == length]
+    return allWords
 
-def choose_letters():
+def chooseLetters():
     global letters
     global allwords
     global gametype
@@ -19,25 +23,25 @@ def choose_letters():
     letters = raw_input().lower()
     if letters in ["three", "3"]:
         letters = 3
-        allwords = all_words_3
+        allwords = loadWords(3)
         print "3 letter words chosen"
     elif letters in ["four", "4"]:
         letters = 4
-        allwords = all_words_4
+        allwords = loadWords(4)
         print "4 letter words chosen"
     elif letters in ["five", "5"]:
         letters = 5
-        allwords = all_words_5
+        allwords = loadWords(5)
         print "5 letter words chosen"
     elif letters in ["n", "num", "numb", "number"]:
         print ""
-        get_digits()
+        getDigits()
     else:
         print "Invalid choice."
-        choose_letters()
+        chooseLetters()
 
 
-def get_digits():
+def getDigits():
     global letters
     print "How many digits? Must be greater than 0. Suggested <= 5"
     letters = raw_input()
@@ -46,13 +50,13 @@ def get_digits():
         math.sqrt(1 / letters)  # get rid of 0 and negatives
         print "%d digit number chosen" % letters
         print ""
-        get_num_type()
+        getNumType()
     except:
         print "Invalid choice."
-        get_digits()
+        getDigits()
 
 
-def get_num_type():
+def getNumType():
     global gametype
     print "Game type (A) or (B)?"
     print "A: Guess by digits"
@@ -66,10 +70,10 @@ def get_num_type():
         print "Game type B chosen"
     else:
         print "Invalid choice."
-        get_num_type()
+        getNumType()
 
 
-def random_word():
+def randomWord():
     global choice
     global allwords
     global gametype
@@ -82,7 +86,7 @@ def random_word():
             choice += str(random.randint(0, 9))
 
 
-def choose_dif():
+def chooseDif():
     global diff
     print "(E)asy or (H)ard?"
     diff = raw_input().lower()
@@ -94,14 +98,14 @@ def choose_dif():
         print "Hard mode chosen."
     else:
         print "Invalid choice."
-        choose_dif()
+        chooseDif()
 
 
-def remove_letter(word, position):
+def remoteLetter(word, position):
     return word[:position] + " " + word[(position + 1):]
 
 
-def make_guess():
+def makeGuess():
     global attempts
     global choice
     global letters
@@ -116,20 +120,20 @@ def make_guess():
         toprint = "word"
     print "Guess a %s:" % toprint
     guess = raw_input().lower()
-    if guess == "i give up!":
+    if guess == "!exit":
         print "You lose after %s attempts." % attempts
         print "The word was: %s" % choice
-    elif guess == "$h0w m3!!1!":
+    elif guess == "!show":
         print "The word is: %s" % choice
         attempts += 9001
         raw_input()
         next()
     elif len(guess) != letters and gametype != "numbb":
         print "Invalid guess. Guesses must be %s characters." % letters
-        make_guess()
+        makeGuess()
     elif "numb" in gametype and (not (guess.isdigit()) or len(guess) > letters):
         print "Invalid guess. Must guess an integer <= the nubmer of digits."
-        make_guess()
+        makeGuess()
     else:
         attempts += 1
         if guess == choice:
@@ -143,12 +147,12 @@ def make_guess():
                 for i in range(0, letters):
                    if temp_guess[i] == temp_choice[i]:
                         rights += 1
-                        temp_guess = remove_letter(temp_guess, i)
-                        temp_choice = remove_letter(temp_choice, i)
+                        temp_guess = remoteLetter(temp_guess, i)
+                        temp_choice = remoteLetter(temp_choice, i)
                 for letter in temp_guess:
                     if letter in temp_choice and letter != " ":
                         wrongs += 1
-                        temp_choice = remove_letter(
+                        temp_choice = remoteLetter(
                             temp_choice,
                             temp_choice.index(letter))
                 past.append([guess, wrongs, rights])
@@ -189,10 +193,10 @@ def next():
             print "Last Guess: %s. %s Wrong. %s Right" % (item[0], item[1], item[2])
         else:
             print "Last Guess: %s was %s" % (item[0], item[1])
-    make_guess()
+    makeGuess()
 
 
-def play_again():
+def playAgain():
     global playing
     print "Would you like to play again? Y/N"
     answer = raw_input().lower()
@@ -201,19 +205,11 @@ def play_again():
     else:
         playing = False
 
-# Not actually useful because you dont need a whole list to make a guess...
-# def gen_num_list(digits):
-#     num_list = []
-#     for i in range(0,int(math.pow(10,digits))):
-#         num_string = str(i)
-#         if len(num_string) < digits:
-#             num_string = "0"*(digits-len(num_string))+num_string
-#         num_list.append(num_string)
-#     return num_list
 
 
-clear()
-print"""
+if __name__ == "__main__":
+    clear()
+    print"""
 =============================================================
 =   *   *   *   *   *   *   *   *   *   *   *   *   *   *   =
 =============================================================
@@ -235,20 +231,20 @@ print"""
 =============================================================
 
 """
-raw_input()
+    raw_input("Press enter to continue")
 
-# GAME START HERE
-playing = True
-while playing:
-    clear()
-    attempts = 0
-    past = []
-    choose_letters()
-    random_word()
-    print ""
-    choose_dif()
-    print "Press enter to continue:"
-    raw_input()
-    clear()
-    make_guess()
-    play_again()
+    # GAME START HERE
+    playing = True
+    while playing:
+        clear()
+        attempts = 0
+        past = []
+        chooseLetters()
+        randomWord()
+        print ""
+        chooseDif()
+        print "Press enter to continue:"
+        raw_input()
+        clear()
+        makeGuess()
+        playAgain()
